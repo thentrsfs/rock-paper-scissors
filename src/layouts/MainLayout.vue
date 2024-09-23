@@ -48,7 +48,6 @@
               v-close-popup
             />
           </q-card-section>
-
           <q-card-section
             :class="$q.screen.lt.sm ? 'column flex-center' : ''"
             :style="$q.screen.lt.sm ? 'margin-top: 30%' : ''"

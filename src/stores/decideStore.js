@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { ref, computed, onMounted } from "vue";
 import { db } from "src/firebase.js";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { useRouter } from "vue-router";
+import { onBeforeMount } from "vue";
 
 export const useDecideStore = defineStore("decide", () => {
   /*
@@ -12,6 +14,8 @@ export const useDecideStore = defineStore("decide", () => {
   const computerChoice = ref(null);
   const result = ref(null);
   const score = ref(0);
+
+  const router = useRouter();
 
   /*
   Functions
@@ -100,6 +104,14 @@ export const useDecideStore = defineStore("decide", () => {
   // Fetch initial score when component mounts
   onMounted(() => {
     fetchScore();
+  });
+
+  onBeforeMount(() => {
+    // Redirect to the root path ("/") on page reload
+    if (window.performance && performance.navigation.type === 1) {
+      // This indicates the page was reloaded
+      router.push("/");
+    }
   });
 
   return {
