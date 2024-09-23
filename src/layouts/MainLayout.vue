@@ -1,44 +1,67 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
+  <q-layout class="container">
+    <q-header class="bg-transparent flex justify-center">
+      <div
+        :class="$q.screen.lt.sm ? 'q-mx-lg items-center q-px-md' : ' q-pa-md'"
+        class="header q-mt-xl flex justify-between"
+      >
+        <HeaderLogo />
+        <div class="score-container column flex-center">
+          <span
+            :class="$q.screen.lt.sm ? 'text-caption' : ' text-subtitle1'"
+            class="text-bold text-accent"
+            >SCORE</span
+          >
+          <span class="barlow-bold text-h3 text-bold text-dark">{{
+            decideStore.score
+          }}</span>
+        </div>
+      </div>
+      <q-btn
+        @click="decideStore.resetScore"
+        class="reset-btn"
+        flat
+        label="RESET SCORE"
+      ></q-btn>
     </q-header>
+    <div>
+      <q-btn
+        class="rules-btn"
+        label="RULES"
+        color="transparent"
+        outline
+        text-color="white"
+        @click="icon = true"
+      />
+      <q-dialog v-model="icon" :maximized="$q.screen.lt.sm ? true : false">
+        <q-card>
+          <q-card-section class="row items-center q-pb-none q-mx-md">
+            <div class="text-h4 text-primary barlow-bold">RULES</div>
+            <q-space />
+            <q-btn
+              icon="close"
+              color="grey-5"
+              size="lg"
+              flat
+              round
+              dense
+              v-close-popup
+            />
+          </q-card-section>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
-
+          <q-card-section
+            :class="$q.screen.lt.sm ? 'column flex-center' : ''"
+            :style="$q.screen.lt.sm ? 'margin-top: 30%' : ''"
+          >
+            <q-img
+              :class="$q.screen.lt.sm ? '' : 'q-ma-md'"
+              :width="$q.screen.lt.sm ? '340px' : '400px'"
+              src="images/image-rules.svg"
+            ></q-img>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+    </div>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -46,61 +69,11 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { useDecideStore } from "src/stores/decideStore.js";
+import { ref } from "vue";
+import HeaderLogo from "src/components/HeaderLogo.vue";
 
-defineOptions({
-  name: 'MainLayout'
-})
+const decideStore = useDecideStore();
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
-
-const leftDrawerOpen = ref(false)
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
-}
+const icon = ref(false);
 </script>
